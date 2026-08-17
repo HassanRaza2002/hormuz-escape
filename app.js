@@ -70,7 +70,7 @@ const imgPaths = {
     playerBoatRightCease: './assets/player_tanker_soft_right-cease_fire.webp',
     muteButton: './assets/Mute.webp',
     unmuteButton: './assets/Unmute.webp',
-    loading: './assets/Loading.webp'
+    loading: './assets/Loading Scene.webp'
 };
 
 const images = {};
@@ -111,33 +111,78 @@ function areCriticalAssetsReady() {
 
 function drawLoadingScreen(currentTime = Date.now()) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#071320';
+    const img = images.loading;
+    const portraitLoading = canvas.height > canvas.width;
+    if (img && img.complete && img.naturalHeight !== 0) {
+        ctx.imageSmoothingEnabled = false;
+        drawImageCover(img, 0, 0, canvas.width, canvas.height, 0.5);
+    } else {
+        ctx.fillStyle = '#071320';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    const shade = ctx.createLinearGradient(0, canvas.height * 0.48, 0, canvas.height);
+    shade.addColorStop(0, 'rgba(3, 15, 25, 0)');
+    shade.addColorStop(0.72, 'rgba(3, 15, 25, 0.45)');
+    shade.addColorStop(1, 'rgba(3, 15, 25, 0.9)');
+    ctx.fillStyle = shade;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const img = images.loading;
-    const size = Math.min(canvas.width, canvas.height) * 0.18;
-    const x = canvas.width / 2;
-    const y = canvas.height / 2;
-    const steps = 12;
-    const angle = Math.floor(currentTime / 110) % steps * ((Math.PI * 2) / steps);
+    const processed = assetsLoaded + assetsFailed;
+    const progress = totalAssets > 0 ? clamp(processed / totalAssets, 0, 1) : 0;
+    const panelW = Math.min(canvas.width * (portraitLoading ? 0.9 : 0.68), 760);
+    const panelH = Math.max(portraitLoading ? 82 : 92, Math.min(portraitLoading ? 108 : 126, canvas.height * (portraitLoading ? 0.13 : 0.16)));
+    const panelX = (canvas.width - panelW) / 2;
+    const panelY = canvas.height - panelH - Math.max(24, canvas.height * 0.045);
+    const border = Math.max(3, Math.round(panelH * 0.035));
 
-    ctx.save();
-    ctx.imageSmoothingEnabled = false;
-    ctx.translate(x, y);
-    ctx.rotate(angle);
-    if (img && img.complete && img.naturalHeight !== 0) {
-        ctx.drawImage(img, -size / 2, -size / 2, size, size);
-    } else {
-        ctx.fillStyle = '#ffcf65';
-        ctx.fillRect(-size / 2, -size / 2, size, size);
-    }
-    ctx.restore();
+    ctx.fillStyle = 'rgba(5, 20, 31, 0.88)';
+    ctx.fillRect(panelX, panelY, panelW, panelH);
+    ctx.strokeStyle = '#fff1bf';
+    ctx.lineWidth = border * 2;
+    ctx.strokeRect(panelX, panelY, panelW, panelH);
+    ctx.strokeStyle = '#1c7690';
+    ctx.lineWidth = border;
+    ctx.strokeRect(panelX + border * 2, panelY + border * 2, panelW - border * 4, panelH - border * 4);
 
-    ctx.font = `22px 'PixelGame'`;
+    const titleSize = Math.max(16, Math.min(portraitLoading ? 22 : 30, panelH * 0.25));
+    ctx.font = `${titleSize}px 'PixelGame'`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
     ctx.fillStyle = '#fff7d7';
-    ctx.fillText(`LOADING ${assetsLoaded}/${totalAssets}`, canvas.width / 2, y + size * 0.72);
+    ctx.fillText(portraitLoading ? 'ENTERING THE STRAIT' : 'NAVIGATING THE STRAIT', canvas.width / 2, panelY + panelH * 0.16);
+
+    const barX = panelX + panelW * 0.09;
+    const barY = panelY + panelH * 0.57;
+    const barW = panelW * 0.82;
+    const barH = Math.max(12, panelH * 0.17);
+    ctx.fillStyle = '#020b13';
+    ctx.fillRect(barX, barY, barW, barH);
+    ctx.strokeStyle = '#fff1bf';
+    ctx.lineWidth = Math.max(2, border * 0.7);
+    ctx.strokeRect(barX, barY, barW, barH);
+
+    const innerPad = Math.max(3, border);
+    const fillW = Math.max(0, (barW - innerPad * 2) * progress);
+    ctx.fillStyle = '#24b9ca';
+    ctx.fillRect(barX + innerPad, barY + innerPad, fillW, barH - innerPad * 2);
+    if (fillW > 8) {
+        const shineW = Math.min(fillW, Math.max(20, barW * 0.08));
+        const travel = Math.max(1, fillW + shineW);
+        const shineX = barX + innerPad + ((currentTime * 0.12) % travel) - shineW;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(barX + innerPad, barY + innerPad, fillW, barH - innerPad * 2);
+        ctx.clip();
+        ctx.fillStyle = 'rgba(255, 241, 191, 0.55)';
+        ctx.fillRect(shineX, barY + innerPad, shineW, barH - innerPad * 2);
+        ctx.restore();
+    }
+
+    ctx.font = `${Math.max(13, Math.min(18, panelH * 0.14))}px 'PixelGame'`;
+    ctx.textBaseline = 'bottom';
+    ctx.fillStyle = '#ffcf65';
+    ctx.fillText(`LOADING ${processed}/${totalAssets}`, canvas.width / 2, panelY + panelH * 0.94);
 }
 
 // ==========================================
