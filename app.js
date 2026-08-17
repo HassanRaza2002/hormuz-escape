@@ -297,7 +297,7 @@ let audioCtx = null;
 let engineOsc = null;
 let engineGain = null;
 let musicStarted = false;
-const gameMusic = new Audio('./assets/brutaldesign-pixel-art-481480.mp3?v=449043b');
+const gameMusic = new Audio('./assets/brutaldesign-pixel-art-481480.mp3?v=audio-fixed-1');
 gameMusic.loop = true;
 gameMusic.volume = 0.68;
 gameMusic.preload = 'auto';
