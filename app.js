@@ -96,7 +96,7 @@ for (const [key, path] of Object.entries(imgPaths)) {
         assetsFailed++;
         console.error(`Missing or failed asset: ${path}`);
     };
-    images[key].src = path;
+    images[key].src = `${path}?v=449043b`;
 }
 
 function areCriticalAssetsReady() {
@@ -252,7 +252,7 @@ let audioCtx = null;
 let engineOsc = null;
 let engineGain = null;
 let musicStarted = false;
-const gameMusic = new Audio('./assets/brutaldesign-pixel-art-481480.mp3');
+const gameMusic = new Audio('./assets/brutaldesign-pixel-art-481480.mp3?v=449043b');
 gameMusic.loop = true;
 gameMusic.volume = 0.68;
 
@@ -2092,3 +2092,4 @@ document.fonts.load('30px "PixelGame"').then(() => {
     // Fallback if font fails to load
     renderDesign();
 });
+
