@@ -255,6 +255,7 @@ let musicStarted = false;
 const gameMusic = new Audio('./assets/brutaldesign-pixel-art-481480.mp3?v=449043b');
 gameMusic.loop = true;
 gameMusic.volume = 0.68;
+gameMusic.preload = 'auto';
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 const showPipDebug = false;
@@ -357,9 +358,10 @@ function ensureAudio() {
     }
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
-    if (!musicStarted) {
-        musicStarted = true;
-        gameMusic.play().catch((err) => {
+    if (!isMuted && gameMusic.paused) {
+        gameMusic.play().then(() => {
+            musicStarted = true;
+        }).catch((err) => {
             musicStarted = false;
             console.warn("Game music could not start yet:", err);
         });
@@ -619,6 +621,7 @@ function drawImageCover(img, dx, dy, dw, dh, anchorY = 0.5) {
 
 window.addEventListener('keydown', (e) => {
     if (scoreEntryActive && document.activeElement === scoreNameInput) return;
+    ensureAudio();
     if (startUiTransition()) {
         e.preventDefault();
         return;
@@ -745,6 +748,8 @@ function getCanvasPoint(clientX, clientY) {
 }
 
 window.addEventListener('mousedown', (e) => handleInteract(e.clientX, e.clientY));
+window.addEventListener('click', ensureAudio, { capture: true });
+window.addEventListener('touchend', ensureAudio, { passive: true });
 window.addEventListener('touchstart', (e) => {
     if (e.touches.length > 0) {
         const point = getCanvasPoint(e.touches[0].clientX, e.touches[0].clientY);
