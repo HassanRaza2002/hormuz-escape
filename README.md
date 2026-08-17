@@ -36,4 +36,3 @@ Choose a control style on the start screen, select a difficulty, then tap or cli
 ## Tech
 
 HTML5 Canvas, vanilla JavaScript, CSS, MediaPipe Hands, and Web Audio.
-

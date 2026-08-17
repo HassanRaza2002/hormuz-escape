@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MD7QYG338C"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-MD7QYG338C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#071320">
+    <meta name="description" content="Pilot a tanker through the Strait of Hormuz in a fast-paced pixel-art survival game with keyboard, touch, tilt, and hand-tracking controls.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Hormuz Escape">
+    <meta property="og:description" content="Dodge mines, evade patrol boats, collect power-ups, and survive the strait.">
+    <meta property="og:image" content="./assets/Start%20Screen.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Hormuz Escape</title>
+    <link rel="icon" type="image/webp" href="./assets/fav%20Icon.webp">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- MediaPipe CDNs -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="font-loader">.</div>
+    <video class="input_video" autoplay muted playsinline style="display:none;"></video>
+    
+    <!-- PiP UI -->
+    <div id="pip-container">
+        <canvas id="pip-canvas" width="320" height="240"></canvas>
+        <img src="./assets/Video Frame.webp" id="pip-frame">
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+    <input id="score-name-input" maxlength="10" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="High score name">
+    <script src="app.js"></script>
+</body>
+
+</html>

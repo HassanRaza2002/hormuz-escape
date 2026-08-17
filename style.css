@@ -1,0 +1,77 @@
+@font-face {
+    font-family: 'PixelGame';
+    src: url('PixelGame.otf') format('opentype');
+}
+
+/* This hidden div forces the browser to load the font immediately */
+#font-loader {
+    font-family: 'PixelGame';
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+}
+
+#gameCanvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    touch-action: none;
+}
+
+#score-name-input {
+    position: absolute;
+    display: none;
+    z-index: 120;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: #fff7d7;
+    font-family: 'PixelGame', monospace;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    caret-color: #fff7d7;
+    -webkit-text-stroke: 2px #071320;
+    text-shadow:
+        3px 0 #071320,
+        -3px 0 #071320,
+        0 3px #071320,
+        0 -3px #071320;
+}
+
+#pip-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: min(320px, 44vw);
+    aspect-ratio: 4 / 3;
+    display: none;
+    z-index: 100;
+}
+
+#pip-canvas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#pip-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 101;
+}
