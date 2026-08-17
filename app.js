@@ -70,7 +70,8 @@ const imgPaths = {
     playerBoatRightCease: './assets/player_tanker_soft_right-cease_fire.webp',
     muteButton: './assets/Mute.webp',
     unmuteButton: './assets/Unmute.webp',
-    loading: './assets/Loading Scene.webp'
+    loading: './assets/Loading Scene.webp',
+    mobileLoadingWheel: './assets/mobile_loading_wheel.png'
 };
 
 const images = {};
@@ -112,60 +113,21 @@ function areCriticalAssetsReady() {
 function drawMobileLoadingScreen(currentTime, processed, progress) {
     const w = canvas.width;
     const h = canvas.height;
-    const bg = ctx.createLinearGradient(0, 0, 0, h);
-    bg.addColorStop(0, '#0b5277');
-    bg.addColorStop(0.55, '#087ea4');
-    bg.addColorStop(1, '#04314f');
-    ctx.fillStyle = bg;
+    ctx.fillStyle = '#2099d0';
     ctx.fillRect(0, 0, w, h);
 
-    // Lightweight moving water bands keep the screen alive without another asset.
-    const waveStep = Math.max(18, Math.round(h * 0.035));
-    const waveOffset = (currentTime * 0.015) % waveStep;
-    ctx.fillStyle = 'rgba(87, 211, 222, 0.13)';
-    for (let y = h * 0.54 + waveOffset; y < h; y += waveStep) {
-        ctx.fillRect(0, Math.round(y), w, Math.max(2, Math.round(h * 0.004)));
-    }
-
     const wheelX = w / 2;
-    const wheelY = h * 0.31;
-    const wheelR = Math.min(w * 0.23, h * 0.115);
-    const spokeLength = wheelR * 1.28;
-    const handle = Math.max(7, wheelR * 0.16);
+    const wheelY = h * 0.3;
+    const wheelSize = Math.min(w * 0.53, h * 0.245);
+    const wheelImg = images.mobileLoadingWheel;
 
     ctx.save();
     ctx.translate(wheelX, wheelY);
-    ctx.rotate(currentTime * 0.0022);
-    ctx.lineCap = 'butt';
-    ctx.strokeStyle = '#061827';
-    ctx.lineWidth = Math.max(11, wheelR * 0.17);
-    for (let i = 0; i < 8; i++) {
-        ctx.rotate(Math.PI / 4);
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(spokeLength, 0);
-        ctx.stroke();
-        ctx.fillStyle = '#061827';
-        ctx.fillRect(spokeLength - handle * 0.25, -handle / 2, handle, handle);
+    ctx.rotate(currentTime * 0.0018);
+    ctx.imageSmoothingEnabled = false;
+    if (wheelImg && wheelImg.complete && wheelImg.naturalHeight !== 0) {
+        ctx.drawImage(wheelImg, -wheelSize / 2, -wheelSize / 2, wheelSize, wheelSize);
     }
-    ctx.strokeStyle = '#ffe076';
-    ctx.lineWidth = Math.max(6, wheelR * 0.1);
-    ctx.beginPath();
-    ctx.arc(0, 0, wheelR, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.strokeStyle = '#fff2bd';
-    ctx.lineWidth = Math.max(3, wheelR * 0.045);
-    ctx.beginPath();
-    ctx.arc(0, 0, wheelR * 0.72, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.fillStyle = '#ffcf65';
-    ctx.beginPath();
-    ctx.arc(0, 0, wheelR * 0.22, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#0a5675';
-    ctx.beginPath();
-    ctx.arc(0, 0, wheelR * 0.095, 0, Math.PI * 2);
-    ctx.fill();
     ctx.restore();
 
     ctx.textAlign = 'center';
@@ -174,17 +136,20 @@ function drawMobileLoadingScreen(currentTime, processed, progress) {
     ctx.fillStyle = '#fff3c4';
     ctx.strokeStyle = '#061827';
     ctx.lineWidth = Math.max(4, w * 0.012);
-    ctx.strokeText('HOLD FAST, CAPTAIN', w / 2, h * 0.49);
-    ctx.fillText('HOLD FAST, CAPTAIN', w / 2, h * 0.49);
+    ctx.strokeText('HOLD FAST, CAPTAIN', w / 2, h * 0.47);
+    ctx.fillText('HOLD FAST, CAPTAIN', w / 2, h * 0.47);
 
     ctx.font = `${Math.max(15, Math.min(22, w * 0.045))}px 'PixelGame'`;
-    ctx.fillStyle = '#7fe5e8';
-    ctx.fillText('CHARTING YOUR ESCAPE', w / 2, h * 0.545);
+    ctx.fillStyle = '#fff2bd';
+    ctx.strokeStyle = '#061827';
+    ctx.lineWidth = Math.max(3, w * 0.008);
+    ctx.strokeText('PLOTTING ESCAPE ROUTE', w / 2, h * 0.535);
+    ctx.fillText('PLOTTING ESCAPE ROUTE', w / 2, h * 0.535);
 
     const barW = w * 0.78;
     const barH = Math.max(16, h * 0.023);
     const barX = (w - barW) / 2;
-    const barY = h * 0.63;
+    const barY = h * 0.65;
     const pad = Math.max(4, barH * 0.2);
     ctx.fillStyle = '#031d31';
     ctx.fillRect(barX, barY, barW, barH);
